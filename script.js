@@ -1,6 +1,6 @@
 // const fetch = require('node-fetch');
 
-const API_URL_CATEGORIA = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+const API_URL_CATEGORIA = 'https://api.mercadolibre.com/sites/MLB/search?q=';
 const API_URL_ITEM = 'https://api.mercadolibre.com/items/';
 
 const totalPriceClass = '.total-price';
@@ -91,8 +91,9 @@ const sumPrice = (price, operador) => {
   } else {
     sum = parseFloat(priceAtual.innerHTML) - price;
   }
-  priceAtual.innerHTML = sum.toFixed(2);
-  console.log(sum.toFixed(2));
+  priceAtual.innerHTML = sum;
+  // priceAtual.innerHTML = sum.toFixed(2);
+  console.log(sum);
 };
 
 function cartItemClickListener(event) {
@@ -134,7 +135,7 @@ const createItemCart = (obj) => {
 };
 
 const fetItem = async (url) => {
- fetch(url, myObject)
+ fetch(url)
   .then((response) => response.json())
   .then(({ id, title, price }) => ({
     sku: id,
@@ -175,8 +176,9 @@ const btnEmpty = () => {
   });
 };
 
-const fetCategoria = async (url) => {
-  fetch(url, myObject)
+const fetCategoria = async (url, categoria) => {
+  const search = `${url}${categoria}`;
+  fetch(search)
   .then((response) => response.json())
   .then((data) => data.results.map(({ id, title, thumbnail }) => ({
     sku: id,
@@ -186,16 +188,39 @@ const fetCategoria = async (url) => {
    .then((data) => createItem(data))
    .then(() => btnCart());
 };
+
+const timeout = (item) => new Promise((resolve) => 
+    setTimeout(() => resolve(fetCategoria(API_URL_CATEGORIA, item)), 1000));
+
+const removeItemAll = async () => {
+  const section = document.querySelector('.items');
+  while (section.firstChild) {
+    section.firstChild.remove();
+  }
+};
+
+const searchItem = () => {
+  const input = document.getElementById('input');
+  const btnInput = document.getElementById('btn-input');
+  btnInput.addEventListener('click', () => {
+    const start = async () => {
+      loadingItem(true);
+      await removeItemAll();      
+      await timeout(input.value);
+    };
+    start();
+  });
+};
+
 // Utilizado conteúdo do stackoverflow para consulta sobre async e await
 // link https://stackoverflow.com/questions/33289726/combination-of-async-function-await-settimeout
-window.onload = () => {
-  const timeout = () => new Promise((resolve) => 
-    setTimeout(() => resolve(fetCategoria(API_URL_CATEGORIA)), 1000));
+window.onload = () => {  
     const start = async () => {
-    await timeout();    
-    loadShop();  
-    btnEmpty(); 
-    };
-  loadingItem(true);
+      loadingItem(true);
+      await timeout('computador');    
+      loadShop();  
+      btnEmpty();
+      searchItem();
+    };  
   start();  
 };
