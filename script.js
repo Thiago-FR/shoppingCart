@@ -1,5 +1,3 @@
-// const fetch = require('node-fetch');
-
 const API_URL_CATEGORIA = 'https://api.mercadolibre.com/sites/MLB/search?q=';
 const API_URL_ITEM = 'https://api.mercadolibre.com/items/';
 
@@ -15,11 +13,6 @@ const loadingItem = (active) => {
     loading.innerHTML = 'loading';
     cart.appendChild(loading);
   }
-};
-
-const myObject = {
-  method: 'GET',
-  headers: { Accept: 'application/json' },
 };
 
 function createProductImageElement(imageSource) {
@@ -188,7 +181,7 @@ const fetCategoria = async (url, categoria) => {
    .then((data) => createItem(data))
    .then(() => btnCart());
 };
-
+// setTimeout Utilziado apenas para brincar!
 const timeout = (item) => new Promise((resolve) => 
     setTimeout(() => resolve(fetCategoria(API_URL_CATEGORIA, item)), 1000));
 
