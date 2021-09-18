@@ -6,6 +6,17 @@ const API_URL_ITEM = 'https://api.mercadolibre.com/items/';
 const totalPriceClass = '.total-price';
 const classCartItem = '.cart__items';
 
+const loadingItem = (active) => {
+  const cart = document.querySelector('.cart');
+  if (!active) cart.lastChild.remove();
+  if (active) {
+    const loading = document.createElement('p');
+    loading.className = 'loading';
+    loading.innerHTML = 'loading';
+    cart.appendChild(loading);
+  }
+};
+
 const myObject = {
   method: 'GET',
   headers: { Accept: 'application/json' },
@@ -36,11 +47,12 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-const createItem = (obj) => {
+const createItem = (obj) => {  
   obj.forEach((element) => {
     const sectionItem = document.querySelector('.items');
     sectionItem.appendChild(createProductItemElement(element));
   });
+  loadingItem(false);
 };
 
 const loadPrice = () => {
@@ -51,6 +63,8 @@ const loadPrice = () => {
 };
 
 const removeSaveAll = () => {
+  const priceAtual = document.querySelector(totalPriceClass);
+  if (localStorage.length === 1) priceAtual.innerHTML = '0';
   localStorage.clear();
 };
 
@@ -69,20 +83,16 @@ const saveShop = () => {
   if (localStorage.length === 1) removeSaveAll();
 };
 
-/* function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-} */
-
 const sumPrice = (price, operador) => {
   const priceAtual = document.querySelector(totalPriceClass);
   let sum = 0;
   if (operador === '+') {
-    sum = parseFloat(priceAtual.innerHTML, 10) + price;
+    sum = parseFloat(priceAtual.innerHTML) + price;
   } else {
-    sum = parseFloat(priceAtual.innerHTML, 10) - price;
+    sum = parseFloat(priceAtual.innerHTML) - price;
   }
-  priceAtual.innerHTML = sum;
-  console.log(sum);
+  priceAtual.innerHTML = sum.toFixed(2);
+  console.log(sum.toFixed(2));
 };
 
 function cartItemClickListener(event) {
@@ -114,7 +124,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const createItemCart = (obj) => {  
+const createItemCart = (obj) => {
+  loadingItem(false);
   const sectionItemCart = document.querySelector(classCartItem);
   sectionItemCart.appendChild(createCartItemElement(obj));
   const { salePrice } = obj;
@@ -122,7 +133,7 @@ const createItemCart = (obj) => {
   saveShop();
 };
 
-const fetItem = (url) => {
+const fetItem = async (url) => {
  fetch(url, myObject)
   .then((response) => response.json())
   .then(({ id, title, price }) => ({
@@ -139,7 +150,14 @@ const btnCart = () => {
     btn.addEventListener('click', async (event) => {
       const idItem = event.target.parentNode.firstChild.innerText;
       const url = `${API_URL_ITEM}${idItem}`;
-      fetItem(url);
+
+      const timeout = () => new Promise((resolve) => 
+      setTimeout(() => resolve(fetItem(url)), 0));
+      const startCart = async () => {
+      await timeout();     
+      };
+      loadingItem(true);
+      startCart();
     });
   });
 };
@@ -148,7 +166,7 @@ const btnEmpty = () => {
   const btn = document.querySelector('.empty-cart');
   const priceAtual = document.querySelector(totalPriceClass);
   btn.addEventListener('click', () => {
-    const sectionItemCart = document.querySelector('.cart__items');
+    const sectionItemCart = document.querySelector(classCartItem);
     while (sectionItemCart.firstChild) {
       sectionItemCart.firstChild.remove();
     }
@@ -157,7 +175,7 @@ const btnEmpty = () => {
   });
 };
 
-const fetCategoria = (url) => {
+const fetCategoria = async (url) => {
   fetch(url, myObject)
   .then((response) => response.json())
   .then((data) => data.results.map(({ id, title, thumbnail }) => ({
@@ -168,9 +186,16 @@ const fetCategoria = (url) => {
    .then((data) => createItem(data))
    .then(() => btnCart());
 };
-
-window.onload = () => {  
-  fetCategoria(API_URL_CATEGORIA);
-  loadShop();
-  btnEmpty();
+// Utilizado conteúdo do stackoverflow para consulta sobre async e await
+// link https://stackoverflow.com/questions/33289726/combination-of-async-function-await-settimeout
+window.onload = () => {
+  const timeout = () => new Promise((resolve) => 
+    setTimeout(() => resolve(fetCategoria(API_URL_CATEGORIA)), 1000));
+    const start = async () => {
+    await timeout();    
+    loadShop();  
+    btnEmpty(); 
+    };
+  loadingItem(true);
+  start();  
 };
