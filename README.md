@@ -1,4 +1,4 @@
-[PROJETO]()
+[PROJETO]() - LINK OFF
 
 # Boas vindas ao repositório do projeto de Carrinho de Compras! <a name="boas-vindas-ao-repositorio-do-projeto-carrinho-de-compras"></a>
 
@@ -28,7 +28,7 @@
   * Entre na pasta do repositório que você acabou de clonar
 
 2. Ou click no link abaixo e veja funcionando.
-  * [PROJETO]()
+  * [PROJETO]() - LINK OFF
 
 ## API Shopping Cart <a name="api"></a>
 
