@@ -4,15 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <title>Shopping Cart</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="img/carrinho.png">
     <script src="script.js"></script>
   </head>
 
   <body>
-    <section id="input-container">
-      <input id="input" type="text">
-      <button id="btn-input">Pesquisar</button>
+    <div id="start-container" style="display: block">
+     <img class="start-img" src="https://media2.giphy.com/media/LRZwAQ4o4AGQBGeNtY/giphy.gif?cid=ecf05e47vjm9co0fnkrus2o4691m5pwwrnoxs5dw0wfifeqk&rid=giphy.gif&ct=g"/>
+    </div>
+
+    <section id="input-container">      
+      <div id="input-container-filho">
+        <section>
+          <input id="input" type="text">
+          <button id="btn-input" class="btn-active">Pesquisar</button> 
+        </section>    
+        <section id="menu">
+          <img src="/img/carregando.gif" alt="carinho de compra">
+        </section>
+      </div>
     </section>
     <section class="container">      
       <section class="items"></section>
@@ -20,7 +32,7 @@
         <span class="cart__title">Carrinho de compras</span>
         <button class="empty-cart">Esvaziar carrinho</button>
         <ol class="cart__items"></ol>
-        <p>Total: R$ <span class="total-price">0</span></p>        
+        <p id="total">Total: R$ <span class="total-price">0</span></p>        
       </section>
     </section>
   </body>

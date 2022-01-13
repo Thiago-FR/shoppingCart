@@ -6,12 +6,43 @@ const classCartItem = '.cart__items';
 
 const loadingItem = (active) => {
   const cart = document.querySelector('.cart');
-  if (!active) cart.lastChild.remove();
+  if (!active) {
+    cart.lastChild.remove();
+    cart.lastChild.remove();
+  }
   if (active) {
     const loading = document.createElement('p');
+    const imgLoad = document.createElement('img');
+    imgLoad.className = 'img-add-product';
+    imgLoad.src = `https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40
+/giphy.gif?cid=ecf05e47p4q6mhzqnvcs5w4qtuv4fhpztp30sczy6k69rgvp&rid=giphy.gif&ct=g`;
     loading.className = 'loading';
     loading.innerHTML = 'loading';
+    cart.appendChild(imgLoad);
     cart.appendChild(loading);
+  }
+};
+
+const loadSecondSection = (active) => {
+  const sectionItem = document.querySelector('.items');
+  const imgLoad = document.createElement('img');
+  imgLoad.className = 'img-product';
+  imgLoad.src = `https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40
+/giphy.gif?cid=ecf05e47p4q6mhzqnvcs5w4qtuv4fhpztp30sczy6k69rgvp&rid=giphy.gif&ct=g`;
+  if (active) sectionItem.appendChild(imgLoad);
+  if (!active && sectionItem.childElementCount === 1) sectionItem.lastChild.remove();
+};
+
+const loadingInicial = (active) => {
+  const cart = document.querySelector('#start-container');
+  const logo = document.getElementById('menu');
+  if (!active) {
+    cart.style.display = 'none';
+    cart.lastChild.remove();
+  }
+  if (active) {  
+    cart.style.display = 'block';
+    logo.style.display = 'flex';
   }
 };
 
@@ -36,16 +67,16 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
   return section;
 }
 
-const createItem = (obj) => {  
+const createItem = (obj) => {
+  loadSecondSection(false);  
   obj.forEach((element) => {
     const sectionItem = document.querySelector('.items');
     sectionItem.appendChild(createProductItemElement(element));
   });
-  loadingItem(false);
+  loadingInicial(false);
 };
 
 const loadPrice = () => {
@@ -84,9 +115,7 @@ const sumPrice = (price, operador) => {
   } else {
     sum = parseFloat(priceAtual.innerHTML) - price;
   }
-  priceAtual.innerHTML = sum;
-  // priceAtual.innerHTML = sum.toFixed(2);
-  console.log(sum);
+  priceAtual.innerHTML = sum.toFixed(2);
 };
 
 function cartItemClickListener(event) {
@@ -143,8 +172,7 @@ const btnCart = () => {
   btnAddCart.forEach((btn) => {
     btn.addEventListener('click', async (event) => {
       const idItem = event.target.parentNode.firstChild.innerText;
-      const url = `${API_URL_ITEM}${idItem}`;
-
+      const url = `${API_URL_ITEM}${idItem}`;      
       const timeout = () => new Promise((resolve) => 
       setTimeout(() => resolve(fetItem(url)), 0));
       const startCart = async () => {
@@ -190,18 +218,19 @@ const removeItemAll = async () => {
   while (section.firstChild) {
     section.firstChild.remove();
   }
+  loadSecondSection(true);
 };
 
 const searchItem = () => {
   const input = document.getElementById('input');
   const btnInput = document.getElementById('btn-input');
-  btnInput.addEventListener('click', () => {
-    const start = async () => {
-      loadingItem(true);
-      await removeItemAll();      
-      await timeout(input.value);
-    };
-    start();
+  const start = async () => {
+    await removeItemAll();      
+    await timeout(input.value);
+  };
+  btnInput.addEventListener('click', () => start());
+  input.addEventListener('keyup', (event) => {
+    if (event.code === 'Enter') start();
   });
 };
 
@@ -209,11 +238,11 @@ const searchItem = () => {
 // link https://stackoverflow.com/questions/33289726/combination-of-async-function-await-settimeout
 window.onload = () => {  
     const start = async () => {
-      loadingItem(true);
-      await timeout('computador');    
-      loadShop();  
+      loadingInicial(true);
+      await timeout('computador');        
       btnEmpty();
       searchItem();
     };  
-  start();  
+  start();
+  loadShop();
 };
