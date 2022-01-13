@@ -4,7 +4,7 @@
 
 ## Sumário <a name="sumario"></a>
 
-- [Boas vindas ao repositório do projeto Trybe Wallet!](#boas-vindas-ao-repositorio-do-projeto-carrinho-de-compras)
+- [Boas vindas ao repositório do projeto Carrinho de Compras!](#boas-vindas-ao-repositorio-do-projeto-carrinho-de-compras)
 - [Sumário](#sumario)
 - [Habilidades desenvolvidas](#habilidades)
 - [Para testar o projeto](#testar-o-projeto)
