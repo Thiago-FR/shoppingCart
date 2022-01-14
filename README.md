@@ -9,6 +9,7 @@
 - [Habilidades desenvolvidas](#habilidades)
 - [Para testar o projeto](#testar-o-projeto)
 - [API Shopping Cart](#api)
+- [Protótipo](#prototipo)
 
 ---
 
@@ -33,3 +34,7 @@
 ## API Shopping Cart <a name="api"></a>
 
 O [manual da API do Mercado Livre](https://developers.mercadolivre.com.br/pt_br/itens-e-buscas) contém muitas informações sobre ela. Utilizaremos alguns dos _endpoints_.
+
+## Protótipo <a name="prototipo"></a>
+
+![Protótipo](/cart.gif)
